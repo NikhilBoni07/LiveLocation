@@ -22,4 +22,30 @@
         android:text="Stop Sharing"
         android:textColor="@android:color/black" />
 
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/ciclecode_edt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top"
+        android:hint="Enter the circle code " />
+
+
+    <Button
+        android:id="@+id/share_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top"
+        android:text="Share my location"
+        android:textColor="@android:color/black" />
+
+
+    <Button
+        android:id="@+id/sharedUsers_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top"
+        android:text="Shared Users"
+        android:textColor="@android:color/black" />
+
 </LinearLayout>

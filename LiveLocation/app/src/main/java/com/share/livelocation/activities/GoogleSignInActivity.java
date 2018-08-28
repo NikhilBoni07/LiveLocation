@@ -8,11 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -39,6 +41,8 @@ public class GoogleSignInActivity extends BaseActivity implements
     private TextView mStatusTextView;
     private TextView mDetailTextView;
 
+    private GoogleApiClient mGoogleApiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,11 @@ public class GoogleSignInActivity extends BaseActivity implements
                 .requestEmail()
                 .build();
         // [END config_signin]
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -136,7 +145,10 @@ public class GoogleSignInActivity extends BaseActivity implements
 
     // [START signin]
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        /*Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);*/
+
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     // [END signin]
@@ -146,13 +158,20 @@ public class GoogleSignInActivity extends BaseActivity implements
         mAuth.signOut();
 
         // Google sign out
-        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+        /*mGoogleSignInClient.signOut().addOnCompleteListener(this,
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         updateUI(null);
                     }
-                });
+                });*/
+        if (mGoogleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+            mGoogleApiClient.connect();
+            updateUI(null);
+        }
+
     }
 
     private void revokeAccess() {
@@ -160,13 +179,20 @@ public class GoogleSignInActivity extends BaseActivity implements
         mAuth.signOut();
 
         // Google revoke access
-        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
+        /*mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         updateUI(null);
                     }
-                });
+                });*/
+
+        if (mGoogleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+            mGoogleApiClient.connect();
+            updateUI(null);
+        }
     }
 
     private void updateUI(FirebaseUser user) {

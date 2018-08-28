@@ -28,11 +28,17 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.share.livelocation.R;
+import com.share.livelocation.pojo.UserDetailsService;
 
-public class TrackerService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+import java.util.ArrayList;
+
+public class TrackerService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, ValueEventListener {
     private static final String TAG = "TrackerService";
 
 
@@ -41,6 +47,7 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
+    private DatabaseReference myAccountRef;
 
     //New
     FusedLocationProviderClient mFusedLocationClient;
@@ -50,6 +57,7 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
     FirebaseUser user;
     String userId;
 
+    private ArrayList<String> circleMember = new ArrayList<>();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -64,8 +72,11 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
 
+
         user = mAuth.getCurrentUser();
         userId = user.getUid();
+
+        myAccountRef = mFirebaseDatabase.getReference().child("Users").child(userId);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -74,6 +85,9 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
         } else {
             buildGoogleApiClient();
         }
+
+        // Will handle if data is shared and update to every other user
+        myAccountRef.addValueEventListener(this);
 
     }
 
@@ -173,5 +187,57 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
         Log.d(TAG, "onLocationChanged location update " + location);
         myRef.child("Users").child(userId).child("lat").setValue(location.getLatitude());
         myRef.child("Users").child(userId).child("lng").setValue(location.getLongitude());
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+        Log.d(TAG, "onDataChange dataSnapshot " + dataSnapshot);
+        UserDetailsService userDetailsService = dataSnapshot.getValue(UserDetailsService.class);
+
+        if (userDetailsService != null && userDetailsService.getUserId().equals(userId)) {
+            if (userDetailsService.getIssharing().equals("true")) {
+                myAccountRef.child("CircleMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.d(TAG, "Test CircleMembers dataSnapshot :: " + dataSnapshot.getValue());
+                        dataSnapshot.getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.d(TAG, "Test dataSnapshot.getRef() dataSnapshot :: " + dataSnapshot.getValue());
+                                // Get all the userId to which I shared
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    String memberId = ds.getKey();
+                                    circleMember.add(memberId);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
+
+        // Updating my Data to all the other users.
+        for (int i = 0; i < circleMember.size(); i++) {
+            Log.d(TAG, "circleMember " + circleMember.get(i));
+            myRef.child("Users").child(circleMember.get(i)).child("JoinedCircles").child(userId).child("lat").setValue(userDetailsService.getLat());
+            myRef.child("Users").child(circleMember.get(i)).child("JoinedCircles").child(userId).child("lng").setValue(userDetailsService.getLng());
+        }
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
     }
 }

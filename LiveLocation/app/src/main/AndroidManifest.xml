@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <application
         android:allowBackup="true"
@@ -21,20 +23,36 @@
             </intent-filter>
         </activity>
         <activity android:name=".LocationActivity" />
-        <activity android:name=".activities.MainActivity"></activity>
+        <activity android:name=".activities.MainActivity" />
 
-        <!-- <activity
+        <!--
+             <activity
              android:name=".GoogleSignInActivity"
-             android:label="@string/label_google_sign_in" />-->
+             android:label="@string/label_google_sign_in" />
+        -->
         <service
             android:name=".service.TrackerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".activities.TrackerActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.MapActivity"
+            android:configChanges="orientation"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC0QUvS9NrR2HCLPa-LPIa4Kh0CC1fOAdQ" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".activities.SharedUserList"></activity>
     </application>
 
 </manifest>
