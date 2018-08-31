@@ -86,4 +86,20 @@
     <string name="email_fmt">Email: %s</string>
     <string name="notification_text">Tracking, tap to cancel</string>
 
+
+    <string name="good_morning">Good Morning</string>
+    <string name="good_afternoon">Good Afternoon</string>
+    <string name="good_evening">Good Evening</string>
+
+
+    //Permissions
+    <string name="enable_permission_message">You need to enable permissions from settings</string>
+    <string name="grant_permission_message">Please grant permissions</string>
+    <string name="enable_permission">Enable Permission</string>
+    <string name="cancel">Cancel</string>
+
+    // Splash Screen
+    <string name="enable_gps">Enable GPS</string>
+    <string name="gps_disable_message">GPS is disabled in your device. You need to enable GPS!!</string>
+    <string name="exit_app">EXIT APP</string>
 </resources>

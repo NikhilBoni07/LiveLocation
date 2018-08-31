@@ -46,4 +46,29 @@
         <item name="android:textSize">36sp</item>
     </style>
 
+
+    <style name="font_icon_text_view">
+        <item name="fontPath">fonts/oic.ttf</item>
+    </style>
+
+    <style name="font_helvetica_bold">
+        <item name="fontPath">fonts/HelveticaNeue-Bold.otf</item>
+    </style>
+
+    <style name="font_helvetica_light">
+        <item name="fontPath">fonts/HelveticaNeue-Light.otf</item>
+    </style>
+
+    <style name="font_helvetica_medium">
+        <item name="fontPath">fonts/HelveticaNeue-Medium.ttf</item>
+    </style>
+
+    <style name="font_helvetica_thin">
+        <item name="fontPath">fonts/HelveticaNeue-Thin.otf</item>
+    </style>
+
+    <style name="font_helvetica_thin_italic">
+        <item name="fontPath">fonts/HelveticaNeue-ThinItalic.otf</item>
+    </style>
+
 </resources>

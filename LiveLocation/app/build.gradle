@@ -44,6 +44,8 @@ dependencies {
     //implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
 
+    implementation 'uk.co.chrisjenx:calligraphy:2.2.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

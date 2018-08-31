@@ -1,6 +1,7 @@
 package com.share.livelocation.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -44,11 +45,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     GoogleMap map;
     MarkerOptions markerOptions;
 
+    String jointedUserId = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            jointedUserId = intent.getStringExtra("memberId");
+        }
 
         mapView = (MapView) findViewById(R.id.map);
 
@@ -72,14 +80,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         };
-
-
-        DatabaseReference commandsRef = myRef.child("Users");
-        commandsRef.addValueEventListener(this);
+        
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
+
+        DatabaseReference commandsRef = myRef.child("Users").child(jointedUserId);
+        commandsRef.addValueEventListener(this);
 
 
     }
@@ -170,15 +178,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            UserDetails userDetails = ds.getValue(UserDetails.class);
-            Log.d("TAG", "onDataChange :: " + userDetails.getLat() + " / " + userDetails.getLng());
-            if (userDetails.getUserId().equals(userId))
-                if (map != null) {
+        Log.d("TAG", "onDataChange dataSnapshot:: " + dataSnapshot);
+        //for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                    mapSettings(map, userDetails.getLat(), userDetails.getLng());
-                }
+        UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
+        Log.d("TAG", "onDataChange :: " + userDetails.getLat() + " / " + userDetails.getLng());
+
+        //if (userDetails.getUserId().equals(jointedUserId))
+        if (map != null) {
+
+            mapSettings(map, userDetails.getLat(), userDetails.getLng());
         }
+        //}
     }
 
     @Override

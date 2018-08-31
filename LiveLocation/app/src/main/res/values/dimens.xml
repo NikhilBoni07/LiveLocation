@@ -8,4 +8,13 @@
     <dimen name="icon_bottom_margin">24dp</dimen>
     <dimen name="title_bottom_margin">16dp</dimen>
     <dimen name="field_width_standard">160dp</dimen>
+
+
+    //Splash
+    <dimen name="text_size_greeting_message">40sp</dimen>
+    <dimen name="sixty_two_dp">62dp</dimen>
+    <dimen name="three_dp">3dp</dimen>
+    <dimen name="sixty_dp">60dp</dimen>
+    <dimen name="seven_dp">7dp</dimen>
+
 </resources>
