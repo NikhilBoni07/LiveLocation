@@ -31,6 +31,7 @@ public class JoinedCircleAdapter extends BaseAdapter {
     private ArrayList<JoinedCircleUsers> joinedList;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
+    private JoinedCircleUsers joinedCircleUsers;
 
     public JoinedCircleAdapter(Context context, ArrayList<JoinedCircleUsers> joinedList) {
         this.context = context;
@@ -67,7 +68,7 @@ public class JoinedCircleAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        JoinedCircleUsers joinedCircleUsers = (JoinedCircleUsers) getItem(position);
+        joinedCircleUsers = (JoinedCircleUsers) getItem(position);
 
         final ViewHolder finalHolder = holder;
         myRef.child("Users").child(joinedCircleUsers.getJoinedMemberId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -88,7 +89,8 @@ public class JoinedCircleAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent mapIntent = new Intent(context, MapActivity.class);
-                mapIntent.putExtra("memberId", "b04v80bQfxVnv9YQdi6Hf9fRy6J3");
+                Log.i(TAG, "on click joinedCircleUsers.getJoinedMemberId() :: " + joinedCircleUsers.getJoinedMemberId());
+                mapIntent.putExtra("memberId", joinedCircleUsers.getJoinedMemberId());
                 context.startActivity(mapIntent);
             }
         });
