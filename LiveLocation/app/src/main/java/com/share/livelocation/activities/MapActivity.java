@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,6 +53,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_map);
 
         Intent intent = getIntent();
@@ -80,7 +85,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         };
-        
+
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
@@ -92,6 +97,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

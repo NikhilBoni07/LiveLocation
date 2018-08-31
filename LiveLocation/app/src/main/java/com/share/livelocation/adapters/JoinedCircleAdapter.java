@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -60,6 +61,7 @@ public class JoinedCircleAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.layout_joined_list, parent, false);
             holder = new ViewHolder();
             holder.userName = (TextView) convertView.findViewById(R.id.userName);
+            holder.member_list = (LinearLayout) convertView.findViewById(R.id.member_list);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -82,7 +84,7 @@ public class JoinedCircleAdapter extends BaseAdapter {
             }
         });
 
-        finalHolder.userName.setOnClickListener(new View.OnClickListener() {
+        holder.member_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent mapIntent = new Intent(context, MapActivity.class);
@@ -98,5 +100,6 @@ public class JoinedCircleAdapter extends BaseAdapter {
     /*private view holder class*/
     private class ViewHolder {
         TextView userName;
+        LinearLayout member_list;
     }
 }

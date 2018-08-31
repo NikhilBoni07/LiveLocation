@@ -102,4 +102,16 @@
     <string name="enable_gps">Enable GPS</string>
     <string name="gps_disable_message">GPS is disabled in your device. You need to enable GPS!!</string>
     <string name="exit_app">EXIT APP</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="app_name_toolbar">Family/Friends Locator</string>
+    <string name="wait">Please Wait</string>
+    <string name="Complete">Cpmplete</string>
+    <string name="Error">Failed</string>
+    <string name="Upload">Share</string>
 </resources>

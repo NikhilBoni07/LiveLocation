@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/default_frag"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Default fragment"
+            android:visible="false" />
+        <item
+            android:id="@+id/shared_members"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Shared Members" />
+        <item
+            android:id="@+id/joined_circles"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Joined Circles" />
+        <item
+            android:id="@+id/join_a_circle"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Join a Circle" />
+
+        <item
+            android:id="@+id/share"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Share my circle Id" />
+
+        <!--<item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tools" />-->
+    </group>
+
+    <!--<item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share my circle Id" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>-->
+
+</menu>
