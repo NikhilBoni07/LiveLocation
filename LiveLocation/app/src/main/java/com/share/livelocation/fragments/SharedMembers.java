@@ -28,7 +28,7 @@ import com.share.livelocation.utils.AppController;
 
 import java.util.ArrayList;
 
-public class SharedMembers extends Fragment {
+public class SharedMembers extends Fragment implements ValueEventListener {
 
     private static final String TAG = "SharedMembers";
 
@@ -85,24 +85,28 @@ public class SharedMembers extends Fragment {
                 }
             }
         };
-        getSharedList();
+
+
+        //getSharedList();
+        myAccRef.addValueEventListener(this);
     }
 
     private void getSharedList() {
+
 
         mProgressDialog = AppController.getInstance().getProgressDialog(context, getResources().getString(R.string.app_name), getResources().getString(R.string.wait), true);
 
         myAccRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i(TAG, "myAccountRef dataSnapshot :: " + dataSnapshot);
+                /*Log.i(TAG, "myAccountRef dataSnapshot :: " + dataSnapshot);
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String memberIds = ds.getKey();
                     JoinedCircleUsers joinedCircleUsers = new JoinedCircleUsers();
                     joinedCircleUsers.setJoinedMemberId(memberIds);
                     memberId.add(joinedCircleUsers);
                 }
-                setListAdapter();
+                setListAdapter();*/
             }
 
             @Override
@@ -118,6 +122,7 @@ public class SharedMembers extends Fragment {
         if (memberId.size() > 0) {
             JoinedCircleAdapter joinedCircleAdapter = new JoinedCircleAdapter(getContext(), memberId);
             userslist.setAdapter(joinedCircleAdapter);
+            joinedCircleAdapter.notifyDataSetChanged();
             userslist.setVisibility(View.VISIBLE);
             AppController.getInstance().dismissProgressDialog(mProgressDialog);
         } else {
@@ -136,5 +141,24 @@ public class SharedMembers extends Fragment {
         SharedMembers sharedMembers = new SharedMembers();
         //sharedMembers.setArguments(bundle);
         return sharedMembers;
+    }
+
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        mProgressDialog = AppController.getInstance().getProgressDialog(context, getResources().getString(R.string.app_name), getResources().getString(R.string.wait), true);
+        Log.i(TAG, "myAccountRef dataSnapshot :: " + dataSnapshot);
+        memberId.clear();
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+            String memberIds = ds.getKey();
+            JoinedCircleUsers joinedCircleUsers = new JoinedCircleUsers();
+            joinedCircleUsers.setJoinedMemberId(memberIds);
+            memberId.add(joinedCircleUsers);
+        }
+        setListAdapter();
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
     }
 }

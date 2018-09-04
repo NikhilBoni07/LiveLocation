@@ -34,6 +34,7 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.activity_main2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Family Locator");
         //setHomeFragment();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

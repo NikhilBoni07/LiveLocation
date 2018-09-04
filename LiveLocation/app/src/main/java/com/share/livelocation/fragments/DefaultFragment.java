@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +21,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.share.livelocation.R;
 import com.share.livelocation.service.GPSTracker;
 import com.share.livelocation.service.TrackerService;
@@ -28,6 +33,8 @@ import com.share.livelocation.service.TrackerService;
 import static android.content.Context.LOCATION_SERVICE;
 
 public class DefaultFragment extends Fragment implements View.OnClickListener {
+    private static final String TAG = "DefaultFragment";
+
     private static final int PERMISSIONS_REQUEST = 1;
     Button start_sharing, stop_sharing;
 
@@ -54,11 +61,11 @@ public class DefaultFragment extends Fragment implements View.OnClickListener {
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference();
-
 
         user = mAuth.getCurrentUser();
         userId = user.getUid();
+
+        myRef = mFirebaseDatabase.getReference().child("Users").child(userId);
 
         start_sharing.setOnClickListener(this);
         stop_sharing.setOnClickListener(this);
@@ -81,14 +88,37 @@ public class DefaultFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start_sharing:
-// check if GPS enabled
+                myRef.child("CircleMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.i(TAG, "dataSnapshot :: " + dataSnapshot);
+                        if (dataSnapshot.getValue() == null || dataSnapshot.getKey() == null || dataSnapshot.getKey().equals("")) {
+                            Toast.makeText(getActivity(), "You haven't shared your location to anyone.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            Log.i(TAG, "dataSnapshot1 :: " + dataSnapshot1);
+                            if (dataSnapshot.getValue() == null || dataSnapshot1.getKey() == null || dataSnapshot1.getKey().equals("")) {
+                                Toast.makeText(getActivity(), "You haven't shared your location to anyone.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                // check if GPS enabled
                 GPSTracker gpsTracker = new GPSTracker(getActivity());
                 Double lat = gpsTracker.getLatitude();
                 Double lng = gpsTracker.getLongitude();
 
-                myRef.child("Users").child(userId).child("lat").setValue(lat);
-                myRef.child("Users").child(userId).child("lng").setValue(lng);
-                myRef.child("Users").child(userId).child("issharing").setValue("true");
+                myRef.child("lat").setValue(lat);
+                myRef.child("lng").setValue(lng);
+                myRef.child("issharing").setValue("true");
 
 
                 serviceStarting();
@@ -139,8 +169,7 @@ public class DefaultFragment extends Fragment implements View.OnClickListener {
         if (permission == PackageManager.PERMISSION_GRANTED) {
             startTrackerService();
         } else {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST);
         }
     }

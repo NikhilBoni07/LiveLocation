@@ -86,6 +86,8 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
             buildGoogleApiClient();
         }
 
+        Log.i(TAG, "Service OnCreate");
+
         // Will handle if data is shared and update to every other user
         myAccountRef.addValueEventListener(this);
 
@@ -144,7 +146,10 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
         public void onLocationResult(LocationResult locationResult) {
             Location location = locationResult.getLastLocation();
             if (location != null) {
+                Log.d(TAG, "userId " + userId);
                 Log.d(TAG, "location update " + location);
+                Log.d(TAG, "location update " + location.getLatitude());
+                Log.d(TAG, "location update " + location.getLongitude());
                 myRef.child("Users").child(userId).child("lat").setValue(location.getLatitude());
                 myRef.child("Users").child(userId).child("lng").setValue(location.getLongitude());
             }
@@ -154,6 +159,12 @@ public class TrackerService extends Service implements GoogleApiClient.Connectio
 
     };
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        //return super.onStartCommand(intent, flags, startId);
+        Log.d(TAG, "onStartCommand ");
+        return START_STICKY;
+    }
 
     @Override
     public void onDestroy() {

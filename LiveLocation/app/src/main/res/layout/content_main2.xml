@@ -8,6 +8,7 @@
     tools:context=".activities.Main2Activity"
     tools:showIn="@layout/app_bar_main2">
 
+
     <FrameLayout
         android:id="@+id/screen_area"
         android:layout_width="match_parent"

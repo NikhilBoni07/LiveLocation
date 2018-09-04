@@ -210,6 +210,7 @@ public class GoogleSignInActivity extends BaseActivity implements
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
 
             startActivity(new Intent(GoogleSignInActivity.this, Main2Activity.class));
+            //startActivity(new Intent(GoogleSignInActivity.this, MainActivity.class));
 
         } else {
             mStatusTextView.setText(R.string.signed_out);

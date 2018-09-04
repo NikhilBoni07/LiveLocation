@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -78,7 +79,7 @@ public class JoinNewCircle extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.share_btn:
+            case R.id.submit_btn:
                 if (!ciclecode_edt.getText().equals("")) {
                     shareCircleCode = Integer.parseInt(ciclecode_edt.getText().toString());
                 } else {
@@ -131,11 +132,11 @@ public class JoinNewCircle extends Fragment implements View.OnClickListener {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             UserDetails userDetails = ds.getValue(UserDetails.class);
                             if (shareCircleCode != 0 && myCircleCode[0] != shareCircleCode && userDetails.getCirclecode() == shareCircleCode) {
-                                myRef.child("Users").child(userDetails.getUserId()).child("JoinedCircles").child(userDetailsHm.get("userId")).child("issharing").setValue(userDetailsHm.get("issharing"));
-                                myRef.child("Users").child(userDetails.getUserId()).child("JoinedCircles").child(userDetailsHm.get("userId")).child("lat").setValue(userDetailsHm.get("lat"));
-                                myRef.child("Users").child(userDetails.getUserId()).child("JoinedCircles").child(userDetailsHm.get("userId")).child("lng").setValue(userDetailsHm.get("lng"));
-                                myRef.child("Users").child(userDetails.getUserId()).child("JoinedCircles").child(userDetailsHm.get("userId")).child("name").setValue(userDetailsHm.get("name"));
-                                myRef.child("Users").child(userId).child("CircleMembers").child(userDetails.getUserId()).child("circlememberid").setValue(userDetails.getUserId());
+                                myRef.child(userDetails.getUserId()).child("JoinedCircles").child(userDetailsHm.get("userId")).child("issharing").setValue(userDetailsHm.get("issharing"));
+                                myRef.child(userDetails.getUserId()).child("JoinedCircles").child(userDetailsHm.get("userId")).child("lat").setValue(userDetailsHm.get("lat"));
+                                myRef.child(userDetails.getUserId()).child("JoinedCircles").child(userDetailsHm.get("userId")).child("lng").setValue(userDetailsHm.get("lng"));
+                                myRef.child(userDetails.getUserId()).child("JoinedCircles").child(userDetailsHm.get("userId")).child("name").setValue(userDetailsHm.get("name"));
+                                myRef.child(userId).child("CircleMembers").child(userDetails.getUserId()).child("circlememberid").setValue(userDetails.getUserId());
                             }
                         }
                     }
@@ -146,7 +147,8 @@ public class JoinNewCircle extends Fragment implements View.OnClickListener {
                     }
                 });
 
-
+                Toast.makeText(getActivity(), "Joined the circle sucessfully", Toast.LENGTH_SHORT).show();
+                AppController.getInstance().replaceFragment(getActivity(), DefaultFragment.newInstance(), true);
                 break;
 
             default:
